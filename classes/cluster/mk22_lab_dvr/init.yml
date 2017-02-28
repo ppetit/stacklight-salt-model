@@ -1,8 +1,10 @@
 classes:
 - system.linux.system.single
 - system.rsyslog.client.single
+- system.openssh.client.lab
 - system.openssh.server.team.lab
-- cluster.mk22_lab_dvr.fuel
+- system.openssh.server.team.stacklight
+- cluster.mk22_lab_dvr.infra
 - cluster.mk22_lab_dvr.openstack
 - cluster.mk22_lab_dvr.stacklight
 - cluster.mk22_lab_dvr.stacklight.client
@@ -10,8 +12,9 @@ parameters:
   _param:
     cluster_domain: mk22-lab-dvr.local
     cluster_name: mk22_lab_dvr
-    # fuel service addresses
-    fuel_config_address: 172.16.10.100
+
+    # infra service addresses
+    infra_config_address: 172.16.10.100
     # openstack service addresses
     openstack_proxy_address: 172.16.10.121
     openstack_proxy_node01_address: 172.16.10.121
@@ -38,7 +41,13 @@ parameters:
     stacklight_monitor_node01_address: 172.16.10.107
     stacklight_monitor_node02_address: 172.16.10.108
     stacklight_monitor_node03_address: 172.16.10.109
+    # Transport for sensu
+    rabbitmq_monitor_password: 'password'
+    rabbitmq_monitor_port: 5672
   linux:
+    _support:
+      sensu:
+        enabled: false
     network:
       host:
         cmp01:
@@ -51,3 +60,59 @@ parameters:
           names:
           - cmp02
           - cmp02.${_param:cluster_domain}
+  apache:
+    _support:
+      sensu:
+        enabled: false
+  cinder:
+    _support:
+      sensu:
+        enabled: false
+  collectd:
+    _support:
+      sensu:
+        enabled: false
+  glance:
+    _support:
+      sensu:
+        enabled: false
+  glusterfs:
+    _support:
+      sensu:
+        enabled: false
+  haproxy:
+    _support:
+      sensu:
+        enabled: false
+  heat:
+    _support:
+      sensu:
+        enabled: false
+  keepalived:
+    _support:
+      sensu:
+        enabled: false
+  keystone:
+    _support:
+      sensu:
+        enabled: false
+  neutron:
+    _support:
+      sensu:
+        enabled: false
+  nginx:
+    _support:
+      sensu:
+        enabled: false
+  nova:
+    _support:
+      sensu:
+        enabled: false
+  ntp:
+    _support:
+      sensu:
+        enabled: false
+  rabbitmq:
+    _support:
+      sensu:
+        enabled: false

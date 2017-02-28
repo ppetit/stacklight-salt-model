@@ -3,6 +3,7 @@ parameters:
     openstack_version: mitaka
     openstack_region: RegionOne
     admin_email: root@localhost
+    cluster_public_host: _
     opencontrail_version: 3.0
     opencontrail_compute_dns: 8.8.8.8
     opencontrail_stats_password: contrail123
@@ -66,7 +67,7 @@ parameters:
     mongodb_admin_password: cloudlab
     mongodb_shared_key: eoTh1AwahlahqueingeejooLughah4tei9feing0eeVaephooDi2li1TaeV1ooth
     ceilometer_influxdb_password: lmapass
-
+    openstack_notification_topics: "notifications,${_param:stacklight_notification_topic}"
   linux:
     network:
       host:

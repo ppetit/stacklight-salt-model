@@ -1,13 +1,19 @@
 classes:
+- system.linux.storage.loopback
 - system.linux.system.repo.contrail
 - system.linux.system.repo.mos9
 - system.nova.compute.cluster
+- system.nova.compute.notification.messagingv2
 - system.opencontrail.compute.cluster
+- system.cinder.volume.single
+- system.cinder.volume.backend.lvm
+- system.cinder.volume.notification.messagingv2
 - system.heka.alarm.openstack_compute
 - service.opencontrail.compute.cluster
 - cluster.mk22_lab_advanced
 parameters:
   _param:
+    loopback_device_size: 50
     cluster_vip_address: ${_param:openstack_control_address}
     cluster_local_address: ${_param:single_address}
     cluster_node01_hostname: ctl01
@@ -44,11 +50,6 @@ parameters:
           - host: ${_param:openstack_control_node01_address}
           - host: ${_param:openstack_control_node02_address}
           - host: ${_param:openstack_control_node03_address}
-      notification:
-        driver: messagingv2
-        topics: "notifications,${_param:stacklight_notification_topic}"
-        notify_on:
-          state_change: vm_and_task_state
   ceilometer:
     agent:
       message_queue:

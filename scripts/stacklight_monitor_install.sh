@@ -1,18 +1,23 @@
 #!/bin/bash -x
 exec > >(tee -i /tmp/"$(basename "$0" .sh)"_"$(date '+%Y-%m-%d_%H-%M-%S')".log) 2>&1
 
+# Restart salt-minion to make sure that it uses the latest Jinja library
+salt '*' --async service.restart salt-minion; sleep 15
+
 # Start by flusing Salt Mine to make sure it is clean
 # Also clean-up the grains files to make sure that we start from a clean state
 salt "*" mine.flush
 salt "*" file.remove /etc/salt/grains.d/collectd
 salt "*" file.remove /etc/salt/grains.d/grafana
 salt "*" file.remove /etc/salt/grains.d/heka
+salt "*" file.remove /etc/salt/grains.d/sensu
 salt "*" file.remove /etc/salt/grains
 
-# Install collectd and heka services on the nodes, this will also generate the
-# metadata that goes into the grains and eventually into Salt Mine
+# Install collectd, heka and sensu services on the nodes, this will also
+# generate the metadata that goes into the grains and eventually into Salt Mine
 salt "*" state.sls collectd
 salt "*" state.sls heka
+salt -C 'I@sensu:client' state.sls sensu
 
 # Gather the Grafana metadata as grains
 salt -C 'I@grafana:collector' state.sls grafana.collector
@@ -35,6 +40,9 @@ salt -C 'I@nagios:server' state.sls nagios
 # Stop the Nagios service because the package starts it by default and it will
 # started later only on the node holding the VIP address
 salt -C 'I@nagios:server' service.stop nagios3
+
+# Update Sensu
+salt -C 'I@sensu:server' state.sls sensu
 
 # Finalize the configuration of Grafana (add the dashboards...)
 salt -C 'I@grafana:client' state.sls grafana.client.service
