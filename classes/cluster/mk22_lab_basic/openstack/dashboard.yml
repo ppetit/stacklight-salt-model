@@ -1,8 +1,10 @@
 classes:
-- system.linux.system.repo.tcp_base
+- system.linux.system.repo.tcp_mk20
+#- system.linux.system.repo.mcp.openstack
+- system.linux.system.repo.mcp.extra
+- system.linux.system.repo.saltstack.trusty
 - system.horizon.server.single
 - system.sphinx.server.doc.reclass
-- cluster.mk22_lab_basic
 parameters:
   linux:
     system:

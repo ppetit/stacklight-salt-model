@@ -5,15 +5,18 @@ classes:
 - system.collectd.remote_client.cluster
 - system.heka.remote_collector.cluster
 - system.heka.remote_collector.input.amqp
+- system.heka.remote_collector.output.sensu
 - system.heka.aggregator.cluster
 - system.heka.aggregator.output.sensu
 - system.elasticsearch.server.cluster
 - system.elasticsearch.server.curator
 - system.kibana.server.single
 - system.grafana.server.single
+- system.grafana.server.plugin.piechart
 - system.influxdb.server.single
 - system.influxdb.database.stacklight
-- system.nagios.server.cluster
+- system.influxdb.database.ceilometer
+- system.sensu.client.unsubscribe.collectd
 - system.sensu.server.cluster
 - cluster.mk22_lab_dvr
 - system.haproxy.proxy.listen.stacklight.elasticsearch
@@ -22,6 +25,7 @@ classes:
 - system.haproxy.proxy.listen.stacklight.influxdb
 - system.haproxy.proxy.listen.stacklight.redis
 - system.haproxy.proxy.listen.stacklight.sensu
+- system.haproxy.proxy.listen.stacklight.uchiwa
 - service.haproxy.proxy.single
 - system.keepalived.cluster.instance.stacklight_monitor_vip
 parameters:
@@ -47,6 +51,10 @@ parameters:
     cluster_node02_address: ${_param:stacklight_monitor_node02_address}
     cluster_node03_hostname: mon03
     cluster_node03_address: ${_param:stacklight_monitor_node03_address}
+  heka:
+    aggregator:
+      sensu_notification_handler: 'stdout'
+      sensu_noop_handler: 'pipe'
   linux:
     network:
       interface:
@@ -76,8 +84,11 @@ parameters:
           enabled: true
           set:
           - pipe
-      check_handlers:
-      - default
+        pipe:
+          enabled: true
+          command: 'cat /dev/null'
+        stdout:
+          enabled: true
     dashboard:
       enabled: true
       backend:

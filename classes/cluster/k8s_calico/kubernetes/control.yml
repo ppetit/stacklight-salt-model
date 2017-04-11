@@ -1,18 +1,43 @@
 classes:
 - service.etcd.server.cluster
-- system.haproxy.proxy.listen.kubernetes.etcd
 - system.haproxy.proxy.listen.kubernetes.apiserver
+- system.salt.minion.cert.etcd_server
 - system.linux.system.repo.docker
 - system.kubernetes.master.cluster
+- service.kubernetes.logging
 - cluster.k8s_calico.kubernetes.compute
 - cluster.k8s_calico
 parameters:
   _param:
     keepalived_vip_interface: ens4
     keepalived_vip_virtual_router_id: 60
+  kubernetes:
+    master:
+      etcd:
+        ssl:
+          enabled: true
+      network:
+        etcd:
+          ssl:
+            enabled: true
   etcd:
     server:
+      source:
+        engine: docker_hybrid
+      ssl:
+        enabled: true
       setup:
         calico:
           key: /calico/v1/ipam/v4/pool/${_param:calico_private_network}-${_param:calico_private_netmask}
           value: '{"masquerade": true, "cidr": "${_param:calico_private_network}/${_param:calico_private_netmask}"}'
+        calico-felix-metrics:
+          key: /calico/v1/config/PrometheusMetricsEnabled
+          value: 'true'
+  haproxy:
+    _support:
+      sensu:
+        enabled: false
+  keepalived:
+    _support:
+      sensu:
+        enabled: false

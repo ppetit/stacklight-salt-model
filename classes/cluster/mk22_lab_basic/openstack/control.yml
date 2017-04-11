@@ -1,9 +1,12 @@
 classes:
 - system.linux.system.lowmem
-- system.linux.system.repo.contrail
-- system.linux.system.repo.mos9
+- system.linux.system.repo.glusterfs
+- system.linux.system.repo.mcp.contrail
+- system.linux.system.repo.mcp.openstack
+- system.linux.system.repo.mcp.extra
+# needed for python-influxdb
 - system.linux.system.repo.mos9_latest
-- system.linux.system.repo.tcp_extra
+- system.linux.system.repo.saltstack.trusty
 - system.memcached.server.single
 - system.rabbitmq.server.cluster
 - system.rabbitmq.server.vhost.openstack
@@ -41,6 +44,7 @@ classes:
 parameters:
   _param:
     keepalived_vip_interface: eth1
+    keepalived_openstack_telemetry_vip_address: 172.16.10.252
     cluster_vip_address: ${_param:openstack_control_address}
     cluster_local_address: ${_param:single_address}
     cluster_node01_hostname: ctl01
@@ -97,3 +101,5 @@ parameters:
       public_networks: []
       contrail:
         version: ${_param:opencontrail_version}
+      identity:
+        region: ${_param:openstack_region}

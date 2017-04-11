@@ -13,6 +13,8 @@ parameters:
     cluster_domain: mk22-lab-dvr.local
     cluster_name: mk22_lab_dvr
 
+    apt_mk_version: nightly
+
     # infra service addresses
     infra_config_address: 172.16.10.100
     # openstack service addresses
@@ -41,6 +43,9 @@ parameters:
     stacklight_monitor_node01_address: 172.16.10.107
     stacklight_monitor_node02_address: 172.16.10.108
     stacklight_monitor_node03_address: 172.16.10.109
+    stacklight_telemetry_address: ${_param:stacklight_monitor_address}
+    stacklight_telemetry_node01_address: ${_param:stacklight_monitor_node01_address}
+    stacklight_log_address: ${_param:stacklight_monitor_address}
     # Transport for sensu
     rabbitmq_monitor_password: 'password'
     rabbitmq_monitor_port: 5672
@@ -65,10 +70,6 @@ parameters:
       sensu:
         enabled: false
   cinder:
-    _support:
-      sensu:
-        enabled: false
-  collectd:
     _support:
       sensu:
         enabled: false
